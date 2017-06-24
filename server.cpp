@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
-#define PORT 9065
+#define PORT 8080
 #define MAX_CLIENTS 30
 
 using namespace std;
@@ -101,8 +101,20 @@ int main()
 
             cout << "CLIENT CONNECTED SUCCESSFULLY" << endl << endl;
 
-            // send message to client
-            send(new_sock, welcome_str.c_str(), 128, 0);
+            // send welcome message to client
+            send(new_sock, welcome_str.c_str(), sizeof(welcome_str), 0);
+
+            // this was temporary code to figure out how to send multiple messages to the client in succession
+            /*string str;
+            while(1)
+            {
+                cout << "TYPE MESSAGE TO CLIENT: ";
+                getline(cin, str);
+                
+                send(new_sock, str.c_str(), sizeof(str), 0);
+
+                str.clear();
+            }*/
 
             // add new socket to array of sockets
             for (int i = 0; i < MAX_CLIENTS; i++)
@@ -117,6 +129,6 @@ int main()
         }
 
         // else it's some other operation on a different socket
-
+        
     }
 }

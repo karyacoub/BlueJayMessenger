@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define PORT 9065
+#define PORT 8080
 
 using namespace std;
 
@@ -14,8 +14,7 @@ int main()
 {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in address;
-    char buffer[128];
-    memset(buffer, 0, 128);
+    char welcome_str[128];
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
 
@@ -32,15 +31,28 @@ int main()
         exit(EXIT_FAILURE);
     }
 
+    int i = 0;
+    while(connect(sock, (struct sockaddr *)&address, sizeof(address)) < 0)
+    {
+        if(i == 0)
+            cout << "ERROR: Connection failed. Retrying..." << endl;
+            i++;
+    }
+
+    // recieve welcome string from server
+    while(read(sock, welcome_str, 128))
+    {
+        cout << welcome_str << endl;
+    }
+
+    /*string str;
     while(1)
     {
-        if (connect(sock, (struct sockaddr *)&address, sizeof(address)) < 0)
-        {
-            cout << "ERROR: Connection failed" << endl;
-            exit(EXIT_FAILURE);
-        }
+        cout << "TYPE MESSAGE TO CLIENT: ";
+        getline(cin, str);
+        
+        send(sock, str.c_str(), sizeof(str), 0);
 
-        read(sock, buffer, 1024);
-        cout << buffer << endl;
-    }
+        str.clear();
+    }*/
 }
