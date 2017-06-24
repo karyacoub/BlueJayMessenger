@@ -32,13 +32,15 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    if (connect(sock, (struct sockaddr *)&address, sizeof(address)) < 0)
+    while(1)
     {
-        cout << "ERROR: Connection failed" << endl;
-        exit(EXIT_FAILURE);
+        if (connect(sock, (struct sockaddr *)&address, sizeof(address)) < 0)
+        {
+            cout << "ERROR: Connection failed" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        read(sock, buffer, 1024);
+        cout << buffer << endl;
     }
-
-    read(sock, buffer, 1024);
-
-    cout << buffer << endl;
 }

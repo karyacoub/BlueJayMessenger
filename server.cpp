@@ -21,7 +21,10 @@ int main()
     fd_set sockset;
     int opt = 1;
 
-    char connected_str[128] = "Connected to server";
+    cout << "PURPL. v0.1" << endl << endl;
+    cout << "STARTING UP SERVER..." << endl;
+
+    string welcome_str = "Welocme to Purpl.!";
 
     // zero out all client sock fds
     for(int i = 0; i < MAX_CLIENTS; i++) { client_socks[i] = 0; }
@@ -43,6 +46,9 @@ int main()
         cout << "ERROR: Could not bind to port " + PORT << endl;
         exit(EXIT_FAILURE);
     }
+
+    cout << "SUCCESS" << endl << endl;
+    cout << "AWAITING CLIENT CONNECTIONS..." << endl;
 
     // listen for on specified socket
     if(listen(master_sock, 5) < 0)
@@ -93,8 +99,10 @@ int main()
                 exit(EXIT_FAILURE);
             }
 
+            cout << "CLIENT CONNECTED SUCCESSFULLY" << endl << endl;
+
             // send message to client
-            send(new_sock, connected_str, 128, 0);
+            send(new_sock, welcome_str.c_str(), 128, 0);
 
             // add new socket to array of sockets
             for (int i = 0; i < MAX_CLIENTS; i++)
