@@ -1,11 +1,12 @@
 #include <iostream>
 #include <stdlib.h>
-#include <string>
+#include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #define PORT 8080
 #define MAX_CLIENTS 30
@@ -21,10 +22,11 @@ int main()
     fd_set sockset;
     int opt = 1;
 
+    char welcome_str[32] = "Welcome to Purpl.!";
+    char message[4096];
+
     cout << "PURPL. v0.1" << endl << endl;
     cout << "STARTING UP SERVER..." << endl;
-
-    string welcome_str = "Welocme to Purpl.!";
 
     // zero out all client sock fds
     for(int i = 0; i < MAX_CLIENTS; i++) { client_socks[i] = 0; }
@@ -48,7 +50,7 @@ int main()
     }
 
     cout << "SUCCESS" << endl << endl;
-    cout << "AWAITING CLIENT CONNECTIONS..." << endl;
+    cout << "AWAITING CLIENT CONNECTIONS..." << endl << endl;
 
     // listen for on specified socket
     if(listen(master_sock, 5) < 0)
@@ -99,36 +101,43 @@ int main()
                 exit(EXIT_FAILURE);
             }
 
-            cout << "CLIENT CONNECTED SUCCESSFULLY" << endl << endl;
+            cout << "CLIENT " << new_sock - 3 << " CONNECTED SUCCESSFULLY" << endl << endl;
 
             // send welcome message to client
-            send(new_sock, welcome_str.c_str(), sizeof(welcome_str), 0);
-
-            // this was temporary code to figure out how to send multiple messages to the client in succession
-            /*string str;
-            while(1)
-            {
-                cout << "TYPE MESSAGE TO CLIENT: ";
-                getline(cin, str);
-                
-                send(new_sock, str.c_str(), sizeof(str), 0);
-
-                str.clear();
-            }*/
+            send(new_sock, welcome_str, sizeof(welcome_str), 0);
 
             // add new socket to array of sockets
             for (int i = 0; i < MAX_CLIENTS; i++)
             {  
                 //if position is empty 
-                if( client_socks[i] == 0 )  
+                if(client_socks[i] == 0)  
                 {  
                     client_socks[i] = new_sock;  
                     break;  
                 }  
-            }  
+            }
+        }
+        
+        // check for further activity on the socket
+        for(int i = 0; i < MAX_CLIENTS; i++)
+        {
+            // if there is activity on a socket, either a message has been sent or client has disconnected
+            if(FD_ISSET(client_socks[i], &sockset))
+            {
+                read(client_socks[i], message, 4096);
+
+                if(strcmp(message, "") == 0) // client has disconnected
+                {
+                    cout << "CLIENT " << client_socks[i] - 3 << " HAS DISCONNECTED" << endl << endl;
+                    client_socks[i] = 0;
+                }
+                else // client sent a message
+                {
+                    cout << "MESSAGE FROM CLIENT " << client_socks[i] - 3 << ": " << message << endl;
+                    memset(message, 0, 4096);
+                }
+            }
         }
 
-        // else it's some other operation on a different socket
-        
     }
 }
