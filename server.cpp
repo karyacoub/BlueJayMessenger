@@ -118,7 +118,7 @@ int main()
             }
         }
         
-        // check for further activity on the socket
+        // check for further activity on sockets
         for(int i = 0; i < MAX_CLIENTS; i++)
         {
             // if there is activity on a socket, either a message has been sent or client has disconnected
@@ -131,9 +131,16 @@ int main()
                     cout << "CLIENT " << client_socks[i] - 3 << " HAS DISCONNECTED" << endl << endl;
                     client_socks[i] = 0;
                 }
-                else // client sent a message
+                else // client sent a message, send that message to all other clients
                 {
-                    cout << "MESSAGE FROM CLIENT " << client_socks[i] - 3 << ": " << message << endl;
+                    //cout << "MESSAGE FROM CLIENT " << client_socks[i] - 3 << ": " << message << endl;
+                    for(int x = 0; x < MAX_CLIENTS; x++)
+                    {
+                        if(client_socks[x] != 0 && x != i)
+                        {
+                            send(client_socks[x], message, 4096, 0);
+                        }
+                    }
                     memset(message, 0, 4096);
                 }
             }

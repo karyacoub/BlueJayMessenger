@@ -6,10 +6,23 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #define PORT 8080
 
 using namespace std;
+
+void * recieve_message(void * sock)
+{
+    int sock_int = *(int*)sock;
+    char str[4096];
+    while(1)
+    {
+        read(sock_int, str, 4096);
+        cout << "MESSAGE FROM CLIENT: " << str << endl;
+        memset(str, 0, 4096);
+    }
+}
 
 int main()
 {
@@ -47,16 +60,20 @@ int main()
 
     message = (char*)malloc(4096 * sizeof(char));
     
-    while(1)
+    // create a new thread that is constantly looking for new messages to recieve
+    pthread_t recieve_thread;
+    int retval = pthread_create(&recieve_thread, NULL, recieve_message, &sock);
+
+    do
     {
-        cout << "TYPE MESSAGE TO SERVER: ";
+        memset(message, 0, 4096);
+
+        cout << "::";
         fgets(message, 4096, stdin);
         strtok(message, "\n");
         
         send(sock, message, 4096, 0);
-
-        memset(message, 0, 4096);
-    }
+    } while(strcmp(message, "//exit")!=0);
 
     free(message);
 }
