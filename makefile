@@ -1,4 +1,6 @@
+all:
+	@g++ -pthread -std=c++11 -o Purpl. client.cpp launcher.cpp
 server:
-	@g++ -o server server.cpp
+	@g++ -pthread -std=c++11 -o server server.cpp
 client:
-	@g++ -o client client.cpp
+	@g++ -pthread -std=c++11 -o client client.cpp
