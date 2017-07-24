@@ -1,150 +1,176 @@
-#include <iostream>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <unistd.h>
-
-#define PORT 8080
-#define MAX_CLIENTS 30
+#include "server.h"
 
 using namespace std;
 
-int main()
+Server::Server()
 {
-    int master_sock = socket(AF_INET, SOCK_STREAM, 0);
-    int new_sock, client_socks[MAX_CLIENTS];
-    struct sockaddr_in address;
-    int addrlen = sizeof(address);
-    fd_set sockset;
-    int opt = 1;
+    init_server();
+}
 
-    char welcome_str[32] = "Welcome to Purpl.!";
-    char message[4096];
+// initialize server socket and address
+void Server::init_server()
+{
+    // initialize set of client file descriptors
+    for(int i = 0; i < MAX_CLIENTS; i++) { client_sockets[i] = 0; }
 
-    cout << "PURPL. v0.1" << endl << endl;
-    cout << "STARTING UP SERVER..." << endl;
-
-    // zero out all client sock fds
-    for(int i = 0; i < MAX_CLIENTS; i++) { client_socks[i] = 0; }
-
-    // create socket file descriptor
-    if(master_sock < 0)
+    // initialize socket
+    server_sock = socket(AF_INET, SOCK_STREAM, 0);
+    if(server_sock < 0)
     {
         cout << "ERROR: Could not instantiate socket" << endl;
         exit(EXIT_FAILURE);
     }
 
+    // set address parameters
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
-    
-    // bind socket to port 9065
-    if(bind(master_sock, (sockaddr *)&address, addrlen) < 0)
+
+    // bind socket to specified port
+    if(bind(server_sock, (sockaddr *)&address, sizeof(address)) < 0)
     {
         cout << "ERROR: Could not bind to port " + PORT << endl;
         exit(EXIT_FAILURE);
     }
 
-    cout << "SUCCESS" << endl << endl;
-    cout << "AWAITING CLIENT CONNECTIONS..." << endl << endl;
+    cout << "Server Initialized" << endl << endl;
+}
 
-    // listen for on specified socket
-    if(listen(master_sock, 5) < 0)
+void Server::listen_for_connections()
+{
+    // listen on specified socket
+    if(listen(server_sock, 0) < 0)
     {
         cout << "ERROR: Could not listen on specified port and IP";
         exit(EXIT_FAILURE);
     }
 
-    int max_sd; // largest socket desriptor, needed for the select funtion
-    int activity; // to be used with select function to check for activity on any of the sockets
+    cout << "Awaiting client connections..." << endl << endl;
+}
+
+// helper function for accept_connection(), add new socket to array of client sockets
+void Server::add_socket(int new_socket)
+{
+    for (int i = 0; i < MAX_CLIENTS; i++)
+    {  
+        //if position is empty 
+        if(client_sockets[i] == 0)  
+        {  
+            client_sockets[i] = new_socket;  
+            break;  
+        }  
+    }
+}
+
+void Server::accept_connection()
+{
+    int client_sock;
+    int addrlen = sizeof(address);
+
+    /*if(num_clients >= MAX_CLIENTS)
+    {
+        cout << "ERROR: Could not accept connection, maximum number of clients reached" << endl << endl;
+        break;
+    }*/
+
+    client_sock = accept(server_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+    if(client_sock < 0)
+    {
+        cout << "ERROR: Could not accept connection" << endl;
+    }
+    
+    // add new socket to array of client sockets
+    add_socket(client_sock);
+}
+
+// uses listen() and accept() sys calls to connect to clients
+void Server::listen_for_clients()
+{
+    listen_for_connections();
+    accept_connection();
+}
+
+void Server::client_disconnect(int * client_socket)
+{
+    cout << "Client " << *client_socket - 3 << " has disconnected" << endl << endl;
+    *client_socket = 0;
+}
+
+void Server::relay_message(int source_client)
+{
+    char * message_with_sender = (char *)malloc(4106 * sizeof(char));
+    strcpy(message_with_sender, "Client ");
+    strcat(message_with_sender, to_string(source_client - 3).c_str());
+    strcat(message_with_sender, ": ");
+    strcat(message_with_sender, message);
+
+    for(int i = 0; i < MAX_CLIENTS; i++)
+    {
+        if(client_sockets[i] != 0 &&  source_client!= client_sockets[i])
+        {
+            send(client_sockets[i], message_with_sender, 4106, 0);
+        }
+    }
+    memset(message, 0, 4106);
+    free(message_with_sender);
+}
+
+void Server::listen_for_messages()
+{
+    int max_sd = 0; // largest socket desriptor, needed for the select funtion
+    int activity;
 
     while(1)
     {
         // clear socket set
-        FD_ZERO(&sockset);
+        FD_ZERO(&client_set);
 
-        // add master socket to set
-        FD_SET(master_sock, &sockset);
-        max_sd = master_sock;
+        // add server socket to set
+        FD_SET(server_sock, &client_set);
 
         // add child sockets to fd set and check for largest socket descriptor
         for(int i = 0; i < MAX_CLIENTS; i++)
         {
             // if socket is valid, add it to set
-            if(client_socks[i] > 0)
+            if(client_sockets[i] > 0)
             {
-                FD_SET(client_socks[i], &sockset);
+                FD_SET(client_sockets[i], &client_set);
             }
 
             // check if current socket is the max socket descriptor
-            if(client_socks[i] > max_sd)
+            if(client_sockets[i] > max_sd)
             {
-                max_sd = client_socks[i];
+                max_sd = client_sockets[i];
             }
         }
 
-        // wait for activity on one of the sockets
-        activity = select(max_sd + 1, &sockset, NULL, NULL, NULL);
+        // monitor sockets for activity
+        activity = select(max_sd + 1, &client_set, NULL, NULL, NULL);
 
         // if there is activity on master socket, then there is an incoming connection
-        if(FD_ISSET(master_sock, &sockset))
+        if(FD_ISSET(server_sock, &client_set))
         {
-            // accept connection from client
-            new_sock = accept(master_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
-            if(new_sock < 0)
-            {
-                cout << "ERROR: Could not accept connection" << endl;
-                exit(EXIT_FAILURE);
-            }
-
-            cout << "CLIENT " << new_sock - 3 << " CONNECTED SUCCESSFULLY" << endl << endl;
-
-            // send welcome message to client
-            send(new_sock, welcome_str, sizeof(welcome_str), 0);
-
-            // add new socket to array of sockets
-            for (int i = 0; i < MAX_CLIENTS; i++)
-            {  
-                //if position is empty 
-                if(client_socks[i] == 0)  
-                {  
-                    client_socks[i] = new_sock;  
-                    break;  
-                }  
-            }
+            accept_connection();
+            cout << "Client has connected" << endl << endl;
         }
-        
-        // check for further activity on sockets
+
+        // check for further activity on all sockets
         for(int i = 0; i < MAX_CLIENTS; i++)
         {
-            // if there is activity on a socket, either a message has been sent or client has disconnected
-            if(FD_ISSET(client_socks[i], &sockset))
+            if(FD_ISSET(client_sockets[i], &client_set))
             {
-                read(client_socks[i], message, 4096);
+                read(client_sockets[i], message, 4106);
 
                 if(strcmp(message, "") == 0) // client has disconnected
                 {
-                    cout << "CLIENT " << client_socks[i] - 3 << " HAS DISCONNECTED" << endl << endl;
-                    client_socks[i] = 0;
+                    client_disconnect(&(client_sockets[i]));
                 }
+
                 else // client sent a message, send that message to all other clients
                 {
-                    //cout << "MESSAGE FROM CLIENT " << client_socks[i] - 3 << ": " << message << endl;
-                    for(int x = 0; x < MAX_CLIENTS; x++)
-                    {
-                        if(client_socks[x] != 0 && x != i)
-                        {
-                            send(client_socks[x], message, 4096, 0);
-                        }
-                    }
-                    memset(message, 0, 4096);
+                    relay_message(client_sockets[i]);
                 }
             }
         }
-
     }
 }

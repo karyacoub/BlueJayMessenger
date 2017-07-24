@@ -14,14 +14,18 @@ class Client
 {
     private:
         int sock;
+        char ip[16];
         char * message;
+        struct sockaddr_in address;
 
-        int init_socket();
+        void init_socket();
         void recieve_messages();
+        void recieve_thread();
         void send_messages();
 
     public:
         Client();
+        Client(char * invite_code);
         int connect_to_server();
         void send_and_recieve();
 };

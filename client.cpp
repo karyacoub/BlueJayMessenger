@@ -2,13 +2,21 @@
 
 using namespace std;
 
+// constructor to be used when hosting a server
 Client::Client()
+{
+    init_socket();
+    strcpy(ip, "127.0.0.1");
+}
+
+// constructor to be used when joining a preexisting server
+Client::Client(char * invite_code)
 {
     init_socket();
 }
 
-// uses the socket() sys call to initialize socket
-int Client::init_socket()
+// uses the socket() sys call to initialize socket and sets server address parameters
+void Client::init_socket()
 {
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -18,16 +26,15 @@ int Client::init_socket()
         exit(EXIT_FAILURE);
     }
 
-    return sock;
+    address.sin_family = AF_INET;
+    address.sin_port = htons(PORT);
 }
 
-// attemp to connect to server (currently uses 127.0.0.1 temporarily)
+// attempt to connect to server using given ip
 int Client::connect_to_server()
 {
-    struct sockaddr_in address;
-
     // convert string-ized ip to type sockaddr_in so that it can be used with connect sys call
-    if(inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0) 
+    if(inet_pton(AF_INET, ip, &address.sin_addr) <= 0) 
     {
         cout << "ERROR: Could not use IP address/IP address not supported" << endl;
         exit(EXIT_FAILURE);
@@ -38,49 +45,54 @@ int Client::connect_to_server()
     while(connect(sock, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         if(i == 0)
+        {
             cout << "ERROR: Connection failed. Retrying..." << endl;
             i++;
+        }
     }
 
-    cout << "Connectioon Successful. Welcome to Purpl.!" << endl << endl;
+    cout << "Connection Successful" << endl << endl;
 }
 
 // uses main thread to send messages to server
 void Client::send_messages()
 {
-    message = (char*)malloc(4096 * sizeof(char));
+    message = (char*)malloc(4106 * sizeof(char));
 
-    do
+    while(strcmp(message, "//exit")!=0)
     {
-        memset(message, 0, 4096);
+        memset(message, 0, 4106);
 
-        fgets(message, 4096, stdin);
+        fgets(message, 4106, stdin);
         strtok(message, "\n");
         
-        send(sock, message, 4096, 0);
-    } while(strcmp(message, "//exit")!=0);
+        send(sock, message, 4106, 0);
+    }
 
 
     free(message);
 }
 
 // function to be used with second thread
-void recieve_thread(void * client_socket)
+void Client::recieve_thread()
 {
-    int sock_int = *(int*)(client_socket);
-    char str[4096];
+    char str[4106];
     while(1)
     {
-        read(sock_int, str, 4096);
-        cout << "MESSAGE FROM CLIENT: " << str << endl;
-        memset(str, 0, 4096);
+        read(sock, str, 4106);
+        if(strcmp(str, "") != 0)
+        {
+            cout  << str << endl;
+        }
+        memset(str, 0, 4106);
     }
 }
 
-// creates a new thread that's always looking to recieve new messages
+// creates a second thread that's always looking to recieve new messages
 void Client::recieve_messages()
 {
-    std::thread recv_thread(&recieve_thread, &sock);
+    std::thread recv_thread(&Client::recieve_thread, this);
+    recv_thread.detach();
 }
 
 // starts sending and recieving messages
