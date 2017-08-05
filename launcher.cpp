@@ -28,8 +28,8 @@ int main()
     // host the server
     if(option == '1')
     {
-        thread t(&client_thread);
-        t.detach();
+        //thread t(&client_thread);
+        //t.detach();
 
         Server server;
         server.listen_for_clients();

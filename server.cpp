@@ -4,6 +4,7 @@ using namespace std;
 
 Server::Server()
 {
+    get_external_ip();
     init_server();
 }
 
@@ -34,6 +35,69 @@ void Server::init_server()
     }
 
     cout << "Server Initialized" << endl << endl;
+}
+
+char * Server::send_ip_request()
+{
+    int sockfd;  
+    struct addrinfo address_info, *server_info, *p;
+    int rv;
+
+    memset(&address_info, 0, sizeof address_info);
+    address_info.ai_family = AF_INET;
+    address_info.ai_socktype = SOCK_STREAM;
+
+    if ((rv = getaddrinfo("checkip.dyndns.org", "http", &address_info, &server_info)) != 0) 
+    {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        exit(1);
+    }
+
+    // loop through all the results and connect to the first we can
+    for(p = server_info; p != NULL; p = p->ai_next) 
+    {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) 
+        {
+            perror("socket");
+            continue;
+        }
+
+        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) 
+        {
+            perror("connect");
+            close(sockfd);
+            continue;
+        }
+
+        break; // if we get here, we must have connected successfully
+    }
+
+    if (p == NULL) 
+    {
+        // looped off the end of the list with no connection
+        fprintf(stderr, "failed to connect\n");
+        exit(2);
+    }
+
+    char request[] = "GET / HTTP/1.1\r\nHost: checkip.dyndns.org\r\nConnection: close\r\n\r\n";
+    char * response = (char*)malloc(1024 * sizeof(char));
+
+    send(sockfd, request, sizeof(request), 0);
+
+    read(sockfd, response, 1024);
+
+    close(sockfd);
+    freeaddrinfo(server_info); // all done with this structure
+
+    return response;
+}
+
+char * Server::get_external_ip()
+{
+    char * ip_response = send_ip_request();
+    ip_response = strtok(ip_response, "A");
+
+    cout << ip_response << endl;
 }
 
 void Server::listen_for_connections()

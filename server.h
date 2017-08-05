@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #define PORT 8080
 #define MAX_CLIENTS 100
@@ -26,6 +27,8 @@ class Server
         void add_socket(int new_socket);
         void client_disconnect(int * client_socket);
         void relay_message(int source_client);
+        char * send_ip_request();
+        char * get_external_ip();
 
     public:
         Server();
