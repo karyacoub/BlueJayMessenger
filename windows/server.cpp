@@ -15,7 +15,7 @@ void Server::init_server()
 
     // initialize socket
     server_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(server_sock < 0)
+    if(server_sock == INVALID_SOCKET)
     {
         cout << "ERROR: Could not instantiate socket" << endl;
         exit(EXIT_FAILURE);
@@ -99,10 +99,10 @@ void Server::client_disconnect(int * client_socket)
 void Server::relay_message(int source_client)
 {
     char * message_with_sender = (char *)malloc(4106 * sizeof(char));
-    strcpy(message_with_sender, "Client ");
-    strcat(message_with_sender, to_string(source_client - 3).c_str());
-    strcat(message_with_sender, ": ");
-    strcat(message_with_sender, message);
+    strcpy_s(message_with_sender, 8, "Client ");
+    strcat_s(message_with_sender, 1024, to_string(source_client - 3).c_str());
+    strcat_s(message_with_sender, 3, ": ");
+    strcat_s(message_with_sender, 4096, message);
 
     for(int i = 0; i < MAX_CLIENTS; i++)
     {
@@ -159,7 +159,7 @@ void Server::listen_for_messages()
         {
             if(FD_ISSET(client_sockets[i], &client_set))
             {
-                read(client_sockets[i], message, 4106);
+                recv(client_sockets[i], message, 4106, 0);
 
                 if(strcmp(message, "") == 0) // client has disconnected
                 {

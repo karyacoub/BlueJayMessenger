@@ -1,12 +1,15 @@
+#define WIN32_LEAN_AND_MEAN
+
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <Windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <stdio.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <unistd.h>
+#include <string>
+
+#pragma comment (lib, "Ws2_32.lib")
 
 #define PORT 8080
 #define MAX_CLIENTS 100

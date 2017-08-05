@@ -6,7 +6,7 @@ using namespace std;
 Client::Client()
 {
     init_socket();
-    strcpy(ip, "127.0.0.1");
+    strcpy_s(ip, 16, "127.0.0.1");
 }
 
 // constructor to be used when joining a preexisting server
@@ -20,7 +20,7 @@ void Client::init_socket()
 {
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(sock < 0)
+    if(sock == INVALID_SOCKET)
     {
         cout << "ERROR: Could not instantiate client socket" << endl;
         exit(EXIT_FAILURE);
@@ -52,6 +52,8 @@ int Client::connect_to_server()
     }
 
     cout << "Connection Successful" << endl << endl;
+
+	return sock;
 }
 
 // uses main thread to send messages to server
@@ -64,7 +66,7 @@ void Client::send_messages()
         memset(message, 0, 4106);
 
         fgets(message, 4106, stdin);
-        strtok(message, "\n");
+        strtok_s(NULL, "\n", &message);
         
         send(sock, message, 4106, 0);
     }
@@ -79,7 +81,7 @@ void Client::recieve_thread()
     char str[4106];
     while(1)
     {
-        read(sock, str, 4106);
+        recv(sock, str, 4106, 0);
         if(strcmp(str, "") != 0)
         {
             cout  << str << endl;
