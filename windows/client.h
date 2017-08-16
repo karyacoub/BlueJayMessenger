@@ -10,7 +10,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-#define PORT 8080
+#define PORT 9028
 
 class Client
 {

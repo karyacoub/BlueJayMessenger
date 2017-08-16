@@ -46,7 +46,7 @@ void Server::init_server()
 void Server::listen_for_connections()
 {
 	// listen on specified socket
-	if (listen(server_sock, 0) < 0)
+	if (listen(server_sock, 1) < 0)
 	{
 		cout << "ERROR: Could not listen on specified port and IP";
 		exit(EXIT_FAILURE);
@@ -106,18 +106,18 @@ void Server::relay_message(int source_client)
 {
 	char * message_with_sender = (char *)malloc(4200 * sizeof(char));
 	strcpy_s(message_with_sender, 8, "Client ");
-	strcat_s(message_with_sender, 3, to_string(source_client - 3).c_str());
-	strcat_s(message_with_sender, 3, ": ");
+	strcat_s(message_with_sender, 10, to_string(source_client + 1).c_str());
+	strcat_s(message_with_sender, 11, ": ");
 	strcat_s(message_with_sender, 4096, message);
 
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if (client_sockets[i] != 0 && source_client != client_sockets[i])
+		if (client_sockets[i] != INVALID_SOCKET && source_client != client_sockets[i])
 		{
 			send(client_sockets[i], message_with_sender, 4200, 0);
 		}
 	}
-	memset(message, 0, 4200);
+	memset(message, 0, 4096);
 	free(message_with_sender);
 }
 
@@ -165,14 +165,14 @@ void Server::listen_for_messages()
 		{
 			if (FD_ISSET(client_sockets[i], &client_set))
 			{
-				recv(client_sockets[i], message, 4106, 0);
+				recv(client_sockets[i], message, 4096, 0);
 
-				if (strcmp(message, "") == 0) // client has disconnected
+				/*if (strcmp(message, "") == 0) // client has disconnected
 				{
 					//client_disconnect(&(client_sockets[i]));
-				}
+				}*/
 
-				else // client sent a message, send that message to all other clients
+				if (strcmp(message, "") != 0) // client sent a message, send that message to all other clients
 				{
 					relay_message(i);
 				}

@@ -65,18 +65,15 @@ void Client::connect_to_server()
 // uses main thread to send messages to server
 void Client::send_messages()
 {
-	message = (char*)malloc(4200 * sizeof(char));
+	message = (char*)malloc(4096 * sizeof(char));
 
 	while (strcmp(message, "//exit") != 0)
 	{
-		memset(message, 0, 4200);
+		memset(message, 0, 4096);
 
-		cout << "::";
-
-		fgets(message, 4200, stdin);
-		strtok_s(NULL, "\n", &message);
+		fgets(message, 4096, stdin);
 	
-		send(sock, message, 4200, 0);
+		send(sock, message, 4096, 0);
 	}
 
 	free(message);

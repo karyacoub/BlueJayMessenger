@@ -10,7 +10,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-#define PORT 8080
+#define PORT 9028
 #define MAX_CLIENTS 100
 
 class Server
@@ -18,7 +18,7 @@ class Server
 private:
 	SOCKET server_sock;
 	SOCKET client_sockets[MAX_CLIENTS];
-	char message[4200];
+	char message[4096];
 	struct sockaddr_in address;
 	fd_set client_set;
 
