@@ -1,9 +1,0 @@
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\bin\Debug\PurplGUI.exe.config
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\bin\Debug\PurplGUI.exe
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\bin\Debug\PurplGUI.pdb
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.csprojResolveAssemblyReference.cache
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.Properties.Resources.resources
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.csproj.GenerateResource.Cache
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.csproj.CoreCompileInputs.cache
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.exe
-C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\PurplGUI\obj\Debug\PurplGUI.pdb

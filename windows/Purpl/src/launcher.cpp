@@ -6,7 +6,7 @@ using namespace std;
 void client_thread()
 {
 	Client client;
-	client.connect_to_server();
+    client.connect_to_server();
 	client.send_and_recieve();
 }
 

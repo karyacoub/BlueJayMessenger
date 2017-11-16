@@ -1,7 +1,0 @@
-﻿  server.cpp
-c:\users\kareem\documents\projects\c++\purpl\windows\bckend\purpl\src\server.cpp(149): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-c:\users\kareem\documents\projects\c++\purpl\windows\bckend\purpl\src\server.cpp(209): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  launcher.cpp
-  client.cpp
-  Generating Code...
-  Purpl.vcxproj -> C:\Users\Kareem\Documents\Projects\C++\Purpl\windows\bckend\x64\Debug\PurplBackend.exe
