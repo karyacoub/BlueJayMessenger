@@ -1,2 +1,2 @@
 # Purpl.
-A simple P2P instant messaging client.
+A simple instant messaging client.
