@@ -1,5 +1,5 @@
 # Purpl.
-A simple P2P instant messaging client.
+A simple instant messaging client.
 
 # v0.11:
 As promised, I will be documenting my progress more thoroughly from now on. Here we go.
