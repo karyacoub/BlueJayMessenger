@@ -1,5 +1,5 @@
 # Purpl.
-A simple P2P instant messaging client.
+A simple instant messaging client.
 
 # v0.1:
  - C++ socket code that allows multiple clients to connect to a single server, and exchange messages.
