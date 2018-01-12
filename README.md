@@ -1,5 +1,5 @@
 # Purpl.
-A simple P2P instant messaging client.
+A simple instant messaging client.
 
 # v0.11:
 As promised, I will be documenting my progress more thoroughly from now on. Here we go.
@@ -17,4 +17,4 @@ As promised, I will be documenting my progress more thoroughly from now on. Here
  
 **December 17, 2017**
  - Now that the semester is over, I have much more time to work on Purpl. Hopefully, progress shall be made much more swiftly from this point on.
- - I've been playing around with JavaScript, HTML5, and Electron, and I've decided that this is, in fact, the route I want to go. I will also be using Node.js for server-side code execution, as well as CSS for stylizing (eventually).
+ - I've been playing around with JavaScript, HTML5, and Electron, and I've decided that this is, in fact, the route I want to go. I will also be using Node.js for server-side code execution, as well as CSS for stylizing.
