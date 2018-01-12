@@ -1,0 +1,22 @@
+{
+  "name": "purpl",
+  "version": "1.0.0",
+  "description": "A simple messaging app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karyacoub/Purpl..git"
+  },
+  "author": "Kareem Yacoub",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karyacoub/Purpl./issues"
+  },
+  "homepage": "https://github.com/karyacoub/Purpl.#readme",
+  "dependencies": {
+    "electron": "^1.7.10"
+  }
+}
