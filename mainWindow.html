@@ -13,22 +13,18 @@
     </div>
     <br>
     <div>
-        <ul>
-            <li id="message-wrapper">Message 1</li><br>
-            <li id="message-wrapper">Message 2</li><br>
-            <li id="message-wrapper">Message 3</li><br>
-        </ul>
+        <iframe src="messages.html" frameborder="0" id="iframe-wrapper"></iframe>
     </div>
 
     <div id="bottom-wrapper">
         <form id="message-form" type="textarea">
             <div id="footer">
                 <input id="message-input" class="text" autofocus>
-                <element class="button" onclick="">Send</element>
+                <element class="button" onclick="sendButtonClicked()">Send</element>
             </div>
         </form>
     </div>
 
-        
+    <script src="mainWindowRenderer.js"></script>
 </body>
 </html>

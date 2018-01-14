@@ -4,13 +4,17 @@ const electron = require('electron');
 const {ipcRenderer} = electron;
 
 // prevent enter key from submiting form
-var form = document.querySelector('#login-form');
-form.addEventListener('submit', function(e){
+var loginForm = document.querySelector('#login-form');
+loginForm.addEventListener('submit', function(e){
+    // don't submit form by default
     e.preventDefault();
+    
+    // instead, call login button event handler to submit username
+    loginButtonClicked();
 });
 
 // log in button click event handler
-function loginButtonClicked(e)
+function loginButtonClicked()
 {
     // grab text in username text box
     var usernameInput = document.querySelector('#username-input').value;
