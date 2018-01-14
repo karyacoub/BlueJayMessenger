@@ -28,7 +28,7 @@ app.on('ready', function()
 
     // Load html into window
     // url.format() formats the url as follows:
-    //   file://dirname/mainWindow.html
+    //   file://dirname/loginWindow.html
     loginWindow.loadURL(url.format(
         {
             pathname: path.join(__dirname, 'loginWindow.html'),
@@ -44,7 +44,7 @@ app.on('ready', function()
         if(mainWindow == null)
             app.quit();
         else
-            loginWindow = null;
+            loginWindow = null; // to aid with garbage collection
     });
 });
 
@@ -53,8 +53,20 @@ ipcMain.on('login-button-success', function(e){
     // Create main window
     mainWindow = new BrowserWindow({
         width: 1000,
-        height: 600,
+        height: 800,
         title: 'Purpl.'
+    });
+
+    mainWindow.loadURL(url.format(
+        {
+            pathname: path.join(__dirname, 'mainWindow.html'),
+            protocol: 'file:',
+            slashes: true
+        }
+    ));
+
+    mainWindow.on('close', function(){
+        app.quit();
     });
 
     // close login window

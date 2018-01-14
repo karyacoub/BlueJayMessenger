@@ -3,6 +3,12 @@
 const electron = require('electron');
 const {ipcRenderer} = electron;
 
+// prevent enter key from submiting form
+var form = document.querySelector('#login-form');
+form.addEventListener('submit', function(e){
+    e.preventDefault();
+});
+
 // log in button click event handler
 function loginButtonClicked(e)
 {

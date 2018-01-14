@@ -2,7 +2,7 @@
   "name": "purpl",
   "version": "1.0.0",
   "description": "A simple messaging app",
-  "main": "main.js",
+  "main": "client.js",
   "scripts": {
     "start": "electron ."
   },
