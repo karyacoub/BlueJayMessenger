@@ -259,7 +259,7 @@
 	.button
 	{
 		display: inline-block;
-		margin-top: 2em;
+		margin: 0em 1em 0em 1em;
 		padding: 0.6em 1em;
 		background: #6C2A6A;
 		border-radius: 4px;
@@ -492,6 +492,7 @@
 		padding: 1em 0em 1em 3em;
 		background-color: #6C2A6A;
 		outline: rgb(92, 36, 91) thick solid;
+		margin: 0em 1em 0em 1em;
 	}
 
 /*********************************************************************************/
