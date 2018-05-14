@@ -25,21 +25,24 @@ function sendButtonClicked()
 
     messageTextBox.value = "";
 
-    // create new list element
-    var li = iframeDoc.createElement('li');
-    li.id = 'message-wrapper';
+    if(message != "")
+    {
+        // create new list element
+        var li = iframeDoc.createElement('li');
+        li.id = 'message-wrapper';
 
-    // create text node to be inserted in the list element
-    var liText = iframeDoc.createTextNode(message);
-    li.appendChild(liText);
+        // create text node to be inserted in the list element
+        var liText = iframeDoc.createTextNode(message);
+        li.appendChild(liText);
 
-    // grab ul element for li to be placed in
-    var ul = iframeDoc.querySelector('#messages-list');
-    ul.appendChild(li);
+        // grab ul element for li to be placed in
+        var ul = iframeDoc.querySelector('#messages-list');
+        ul.appendChild(li);
 
-    // create and append line break to html
-    var br = iframeDoc.createElement('br');
-    ul.appendChild(br);
+        // create and append line break to html
+        var br = iframeDoc.createElement('br');
+        ul.appendChild(br);
 
-    br.scrollIntoView();
+        br.scrollIntoView();
+    }
 }

@@ -23,7 +23,7 @@ app.on('ready', function()
         title: 'Purpl.'
     });
 
-    // login screen doesn't need a context menu, so remove it
+    // login screen doesn't need a context menu, but it is present by default, so remove it
     loginWindow.setMenu(null);
 
     // Load html into window
