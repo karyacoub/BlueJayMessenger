@@ -49,7 +49,8 @@ app.on('ready', function()
 });
 
 // successful logon event handler
-ipcMain.on('login-button-success', function(e){
+ipcMain.on('login-button-success', function(e)
+{
     // Create main window
     mainWindow = new BrowserWindow({
         width: 1000,
