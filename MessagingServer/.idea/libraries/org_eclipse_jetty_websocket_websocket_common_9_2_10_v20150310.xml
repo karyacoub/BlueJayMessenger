@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="org.eclipse.jetty.websocket:websocket-common:9.2.10.v20150310" type="repository">
+    <properties maven-id="org.eclipse.jetty.websocket:websocket-common:9.2.10.v20150310" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/websocket-common-9.2.10.v20150310.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/websocket-api-9.2.10.v20150310.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-util-9.2.10.v20150310.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-io-9.2.10.v20150310.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

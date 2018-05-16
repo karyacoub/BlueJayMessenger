@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="org.glassfish.tyrus:tyrus-server:1.2" type="repository">
+    <properties maven-id="org.glassfish.tyrus:tyrus-server:1.2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/tyrus-server-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javax.websocket-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tyrus-core-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tyrus-spi-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tyrus-websocket-core-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

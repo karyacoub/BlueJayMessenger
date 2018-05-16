@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/karyacoub/Purpl.#readme",
   "dependencies": {
-    "electron": "^1.7.10"
+    "electron": "^1.7.10",
+    "ws": "^5.1.1"
   }
 }
