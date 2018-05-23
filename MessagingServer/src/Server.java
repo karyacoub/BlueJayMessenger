@@ -1,7 +1,5 @@
-import javax.websocket.OnClose;
-import javax.websocket.OnOpen;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
@@ -10,7 +8,7 @@ import java.util.HashSet;
 @ServerEndpoint("/chat")
 public class Server
 {
-    private Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
+    private static Set<Session> clients = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
     public void onOpen(Session session)
@@ -29,6 +27,19 @@ public class Server
         for(Session s : clients)
         {
             s.getBasicRemote().sendText(String.format("%s has left the chatroom.", session.getId()));
+        }
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) throws IOException
+    {
+        System.out.println(session.getId() + ": " + message);
+        for(Session client : clients)
+        {
+            if(!session.getId().equals(client.getId()))
+            {
+                client.getBasicRemote().sendText(message);
+            }
         }
     }
 }

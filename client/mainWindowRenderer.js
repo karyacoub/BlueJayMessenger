@@ -30,19 +30,28 @@ function sendButtonClicked()
         // create new list element
         var li = iframeDoc.createElement('li');
         li.id = 'message-wrapper';
+        li.className = 'speech-bubble';
 
-        // create text node to be inserted in the list element
+        // create text node, insert into the list element
         var liText = iframeDoc.createTextNode(message);
         li.appendChild(liText);
 
+        // create empty li element to be inserted as a placeholder to start a new column
+        var templi = iframeDoc.createElement('li');
+        templi.id = 'temp-message-wrapper';
+
         // grab ul element for li to be placed in
-        var ul = iframeDoc.querySelector('#messages-list');
+        var ul = (iframeDoc.getElementsByClassName('right'))[0].childNodes[1];
+
         ul.appendChild(li);
 
-        // create and append line break to html
-        var br = iframeDoc.createElement('br');
-        ul.appendChild(br);
+        li.scrollIntoView();
 
-        br.scrollIntoView();
+        ipcRenderer.send('message-sent', message);
     }
+}
+
+function messageRecieved(data)
+{
+    console.log(data);
 }

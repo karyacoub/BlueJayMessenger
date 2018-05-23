@@ -11,7 +11,7 @@ public class Main
         {
             server.start();
 
-            System.out.println("Press 'Enter' to stop the server..");
+            System.out.println("Press 'Enter' to stop the server...");
             Scanner sc = new Scanner(System.in);
             sc.nextLine();
         }

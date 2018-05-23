@@ -491,8 +491,13 @@
 	{
 		padding: 1em 0em 1em 3em;
 		background-color: #6C2A6A;
-		outline: rgb(92, 36, 91) thick solid;
-		margin: 0em 1em 0em 1em;
+		margin: 0em 1em 0.75em 1em;
+	}
+
+	#temp-message-wrapper {
+		padding: 1em 0em 1em 3em;
+		background-color: transparent;
+		margin: 0em 1em 2em 1em;
 	}
 
 	#iframe-wrapper
@@ -779,4 +784,36 @@
 		border-top-color: #292929;
 	}
 
+	/*********************************************************************************/
+	/* Speech Bubble                                                                 */
+	/*********************************************************************************/
+
+	.speech-bubble {
+		position: relative;
+		background: #6C2A6A;
+		border-radius: .4em;
+	}
 	
+	.speech-bubble:after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 50%;
+		width: 0;
+		height: 0;
+		border: 7px solid transparent;
+		border-left-color: #6C2A6A;
+		border-right: 0;
+		margin-top: -7px;
+		margin-right: -7px;
+	}
+
+	div.left {
+		width: 50%;
+		float: left;
+	}
+
+	div.right {
+		width: 50%;
+		float: right;
+	}

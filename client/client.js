@@ -18,9 +18,9 @@ process.env.NODE_ENV = 'production';
 let loginWindow;
 let mainWindow;
 
-client.on('connectFailed', function(error) 
+client.on('error', function(error) 
 {
-    alert('Connect Error: ' + error.toString());
+    alert('Connection Error - ' + error.toString());
 });
  
 client.on('connect', function(connection) 
@@ -34,6 +34,11 @@ client.on('connect', function(connection)
     {
         console.log('Connection Closed');
     });
+});
+
+client.on('message', function(data)
+{
+    
 });
 
 app.on('ready', function()
@@ -62,12 +67,11 @@ app.on('ready', function()
     // quit app when closed
     loginWindow.on('closed', function()
     {
-        // close client connection to server
-        client.close();
-
         // only quit the app if user has not logged in
         if(mainWindow == null)
         {
+            // close client connection to server
+            client.close();
             app.quit();
         }
         else
@@ -80,7 +84,6 @@ app.on('ready', function()
 // successful logon event handler
 ipcMain.on('login-button-success', function(e)
 {
-    console.log(window.location.host);
     // Create main window
     mainWindow = new BrowserWindow({
         width: 1000,
@@ -96,10 +99,23 @@ ipcMain.on('login-button-success', function(e)
         }
     ));
 
-    mainWindow.on('close', function(){
+    mainWindow.on('close', function() {
+        client.close();
         app.quit();
     });
 
     // close login window
     loginWindow.close();
+});
+
+ipcMain.on('message-sent', function(e, message)
+{
+    try
+    {
+        client.send(message);
+    }
+    catch(e)
+    {
+        alert("Error - Message could not be sent.");
+    }
 });
