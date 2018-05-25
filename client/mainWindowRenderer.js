@@ -5,13 +5,15 @@ const {ipcRenderer} = electron;
 
 // prevent enter key from submiting form
 var messageForm = document.querySelector('#message-form');
-messageForm.addEventListener('submit', function(e){
+messageForm.addEventListener('submit', function(e) {
     // don't submit form by default
     e.preventDefault();
 
     // instead, call the send button click event handler
     sendButtonClicked();
 });
+
+ipcRenderer.on('message-recieved', (e, data) => { messageRecieved(e, data); });
 
 // send button click event handler
 function sendButtonClicked()
@@ -51,7 +53,7 @@ function sendButtonClicked()
     }
 }
 
-function messageRecieved(data)
+function messageRecieved(e, data)
 {
-    console.log(data);
+    alert(data);
 }

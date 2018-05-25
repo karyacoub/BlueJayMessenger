@@ -20,13 +20,13 @@ let mainWindow;
 
 client.on('error', function(error) 
 {
-    alert('Connection Error - ' + error.toString());
+    app.quit();
 });
  
 client.on('connect', function(connection) 
 {
     console.log('Connected to server');
-    connection.on('error', function(error) 
+    connection.on('error', function(error)
     {
         console.log("Connection Error: " + error.toString());
     });
@@ -38,7 +38,7 @@ client.on('connect', function(connection)
 
 client.on('message', function(data)
 {
-    
+    mainWindow.webContents.send('message-recieved', data);
 });
 
 app.on('ready', function()
