@@ -494,10 +494,23 @@
 		margin: 0em 1em 0.75em 1em;
 	}
 
-	#temp-message-wrapper {
-		padding: 1em 0em 1em 3em;
-		background-color: transparent;
-		margin: 0em 1em 2em 1em;
+	#message-wrapper-padding {
+		padding: 1em 2em 1.5em 2em;
+		margin: 0em 1em 0.5em 1em;
+		word-wrap: break-word;
+		visibility: hidden;
+	}
+
+	#username-wrapper {
+		margin: 0em 0em 0.25em 0em;
+		padding: 0em 0em 0em 2em;
+		color: #a6a6a6;
+	}
+
+	#username-wrapper-padding {
+		margin: 0em 0em 0.25em 0em;
+		padding: 0em 0em 0em 2em;
+		visibility: hidden;
 	}
 
 	#iframe-wrapper
@@ -804,8 +817,28 @@
 		border: 7px solid transparent;
 		border-left-color: #6C2A6A;
 		border-right: 0;
-		margin-top: -7px;
+		/*margin-top: -7px;*/
 		margin-right: -7px;
+	}
+
+	.speech-bubble-recieved {
+		position: relative;
+		background: #6c2a6a;
+		border-radius: .4em;
+	}
+
+	.speech-bubble-recieved:after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		width: 0;
+		height: 0;
+		border: 7px solid transparent;
+		border-right-color: #6c2a6a;
+		border-left: 0;
+		/*margin-top: -7px;*/
+		margin-left: -7px;
 	}
 
 	div.left {
