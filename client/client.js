@@ -7,8 +7,14 @@ const url = require('url');
 const path = require('path');
 
 var WebSocket = require('ws');
+
 var serverURL = "ws://localhost:8025/chat";
-var client = new WebSocket(serverURL);
+const connectionTimeout = 1000;
+
+// websocket constructor initializes object and connects to server
+const client = new WebSocket(serverURL, {
+    handshakeTimeout: connectionTimeout
+});
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
